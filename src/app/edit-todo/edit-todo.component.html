@@ -1,0 +1,25 @@
+<section class="sample-app-content">
+
+    <h1>Edit todo</h1>
+
+    <form [formGroup]="editTodoForm" (ngSubmit)="editTodo(editTodoForm.value)">
+        <p>
+            <label>Title:</label>
+            <input type="text" formControlName="title">
+        </p>
+        <p>
+            <label>Description:</label>
+            <input type="description" formControlName="description">
+        </p>
+        <p>
+            <label>Due date:</label>
+            <input type="date" formControlName="dueDate">
+        </p>
+        <p>
+            <button type="submit" [disabled]="!editTodoForm.valid">Submit</button>
+        </p>
+        <p>
+            <button routerLink="/">Cancel</button>
+        </p>
+    </form>
+</section>

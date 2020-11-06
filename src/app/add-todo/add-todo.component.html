@@ -1,0 +1,23 @@
+<section class="sample-app-content">
+
+    <h1>Add todo</h1>
+
+    <form [formGroup]="addTodoForm" (ngSubmit)="addTodo(addTodoForm.value)">
+        <p>
+            <label>Title:</label>
+            <input type="text" formControlName="title">
+        </p> 
+        <p>
+            <label>Description:</label>
+            <input type="description" formControlName="description">
+        </p>
+        <p>
+            <label>Due date:</label>
+            <input type="date" formControlName="dueDate">
+        </p>
+        <p>
+            <button type="submit" [disabled]="!addTodoForm.valid">Submit</button>
+            <button routerLink="/todos">Cancel</button>
+        </p>
+    </form>
+</section>

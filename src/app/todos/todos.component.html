@@ -1,0 +1,80 @@
+<header>
+
+    <h1>Todos</h1>
+
+
+    <label for="searchTodo">Search</label>
+    <input type="text" placeholder="Search todo" (keyup)="searchInput(input.value)" id="searchTodo" name="searchTodo" #input> 
+
+    <button routerLink="/add-todo">Create todo</button>
+
+
+
+    <br><br><br>
+
+    
+    <select (change)="getTodos(input.value,field.value,order.value,done.value)" #field>
+        <option></option>
+        <option value="title">Title</option>
+        <option value="created">Created</option>
+        <option value="dueDate">Due date</option>
+        <option value="done">Done</option>
+    </select>
+
+    <select (change)="getTodos(input.value,field.value,order.value,done.value)" #order>
+        <option></option>
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+    </select>
+
+    <select (change)="getTodos(input.value,field.value,order.value,done.value)" #done>
+        <option></option>
+        <option value="true">True</option>
+        <option value="false">False</option>
+    </select>
+    
+</header>   
+
+
+<!-- tasto per procedere con l'eliminazione multipla dei todos -->
+<div *ngIf="todos.length > 1" >
+    <button (click)="displayCheckboxes()" >Proceed to delete multiple todos</button>
+</div>
+<div *ngIf="todosToDelete.length > 0" >
+    <button (click)="deleteMultipleTodos()">Delete multiple todos</button>
+</div>
+
+
+
+<br><br><hr>
+
+<div *ngIf="todos.length < 1 && loading ">Loading...</div>
+<div *ngIf="todos.length < 1 && input.value == '' && !loading ">No todos yet</div>
+<div *ngIf="todos.length < 1 && input.value != '' ">No todos match your search</div>
+
+<div *ngFor = "let todo of todos; let i = index">
+
+    <!-- checkbox di test per il delete Bulk-->
+    <div *ngIf="bulkDeleteActivated">
+        <label>Delete</label>
+        <input type="checkbox" name="todo" value="todo._id" (change)=addTodosToDelete(todo._id)>
+    </div>
+
+    <input type="checkbox" [checked]="todo.done" (change)="setDone(todo._id,todo.done)" [(ngModel)]="todos[i].done" >
+
+    <h3>{{todo.title}}</h3>
+    <p>{{todo.description}}</p> 
+
+    <h6>Created on : {{todo.created | formatDate }}</h6>
+
+    <div *ngIf="todo.dueDate != null">
+        <h5>Due date: {{todo.dueDate | formatDate}}</h5>
+    </div>
+
+
+    <button routerLink="/edit-todo/{{todo._id}}">Edit</button>
+    <button (click)="deleteTodo(todo._id)">Delete</button>
+
+    <hr>
+
+</div>
