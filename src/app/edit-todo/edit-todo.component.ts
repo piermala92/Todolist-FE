@@ -5,6 +5,20 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorMappingService } from '../services/utilities/error-mapping.service';
 
+
+
+interface Todo {
+
+  title : string;
+  description : string;
+  done : boolean;
+  created : Date;
+  dueDate : Date;
+
+}
+
+
+
 @Component({
   selector: 'app-edit-todo',
   templateUrl: './edit-todo.component.html',
@@ -12,8 +26,8 @@ import { ErrorMappingService } from '../services/utilities/error-mapping.service
 })
 export class EditTodoComponent implements OnInit {
 
-  todoId : any;
-  todo : any = {};
+  todoId : string;
+  todo : Todo;
 
   editTodoForm : FormGroup;
 
@@ -24,9 +38,9 @@ export class EditTodoComponent implements OnInit {
     /// qui la inizializzo per creare la form
     this.editTodoForm = formBuilder.group(
       {
-        'title': [this.todo.title, Validators.compose([Validators.required, Validators.maxLength(25)])],
-        'description' : [this.todo.description, Validators.maxLength(50)],
-        'dueDate' : [this.todo.dueDate]
+        'title': [undefined, Validators.compose([Validators.required, Validators.maxLength(25)])],
+        'description' : [undefined, Validators.maxLength(50)],
+        'dueDate' : [undefined]
       }
     )
 

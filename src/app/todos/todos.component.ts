@@ -5,6 +5,18 @@ import { debounceTime, map } from 'rxjs/operators';
 
 
 
+interface Todo {
+
+  title : string;
+  description : string;
+  done : boolean;
+  created : Date;
+  dueDate : Date;
+
+}
+
+
+
 @Component({
   selector: 'app-todos',
   templateUrl: './todos.component.html',
@@ -13,10 +25,10 @@ import { debounceTime, map } from 'rxjs/operators';
 })
 export class TodosComponent implements OnInit {
 
-  todos : any = [];
+  todos : Todo[] = [];
   loading: boolean;
   bulkDeleteActivated : boolean;
-  todosToDelete = [];
+  todosToDelete : Todo[] = [];
 
   constructor(private todoService : TodoService) { }
 

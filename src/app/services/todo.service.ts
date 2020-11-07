@@ -1,6 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
+
+
+
+interface Todo {
+
+  title : string;
+  description : string;
+  done : boolean;
+  created : Date;
+  dueDate : Date;
+
+}
+
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -48,7 +63,7 @@ export class TodoService {
           (orderTerm == undefined || orderTerm == null) &&
           (doneTerm == undefined || doneTerm == null) 
         )
-      return this.httpClient.get("http://18.130.183.191:4500/todos");
+      return this.httpClient.get<Todo[]>("http://18.130.183.191:4500/todos");
 
 
       /// operatore ternario qua
@@ -65,7 +80,7 @@ export class TodoService {
             .append("done",doneTerm)
 
 
-      return this.httpClient.get("http://18.130.183.191:4500/todos", { params : httpParams });
+      return this.httpClient.get<Todo[]>("http://18.130.183.191:4500/todos", { params : httpParams });
 
 
     }
@@ -76,7 +91,7 @@ export class TodoService {
 
   getTodoById(id){
 
-    return this.httpClient.get("http://18.130.183.191:4500/todos/" + id);
+    return this.httpClient.get<Todo>("http://18.130.183.191:4500/todos/" + id);
 
   }
 
@@ -114,7 +129,7 @@ export class TodoService {
 
 
   /// DELETE MULTIPLE TODOS
-  deleteMultipleTodos(todos : any[]){
+  deleteMultipleTodos(todos : Todo[]){
 
     console.log(todos);
 
