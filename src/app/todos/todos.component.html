@@ -1,80 +1,155 @@
-<header>
+<div id="todos">
 
-    <h1>Todos</h1>
+    <header>
 
+        <h1 id="title" class="mat-h1">Todos</h1>
 
-    <label for="searchTodo">Search</label>
-    <input type="text" placeholder="Search todo" (keyup)="searchInput(input.value)" id="searchTodo" name="searchTodo" #input> 
+        <div class="header-container">
 
-    <button routerLink="/add-todo">Create todo</button>
-
-
-
-    <br><br><br>
-
-    
-    <select (change)="getTodos(input.value,field.value,order.value,done.value)" #field>
-        <option></option>
-        <option value="title">Title</option>
-        <option value="created">Created</option>
-        <option value="dueDate">Due date</option>
-        <option value="done">Done</option>
-    </select>
-
-    <select (change)="getTodos(input.value,field.value,order.value,done.value)" #order>
-        <option></option>
-        <option value="asc">Ascending</option>
-        <option value="desc">Descending</option>
-    </select>
-
-    <select (change)="getTodos(input.value,field.value,order.value,done.value)" #done>
-        <option></option>
-        <option value="true">True</option>
-        <option value="false">False</option>
-    </select>
-    
-</header>   
-
-
-<!-- tasto per procedere con l'eliminazione multipla dei todos -->
-<div *ngIf="todos.length > 1" >
-    <button (click)="displayCheckboxes()" >Proceed to delete multiple todos</button>
-</div>
-<div *ngIf="todosToDelete.length > 0" >
-    <button (click)="deleteMultipleTodos()">Delete multiple todos</button>
-</div>
+            <mat-form-field id="searchInput" class="example-full-width">
+                <mat-label>Search</mat-label>
+                <input matInput type="search" placeholder="Search todo"
+                    (keyup)="getTodos(input.value,field.value,'asc',done.value)" id="searchTodo" name="searchTodo"
+                    #input>
+            </mat-form-field>
 
 
 
-<br><br><hr>
+            <br><br>
 
-<div *ngIf="todos.length < 1 && loading ">Loading...</div>
-<div *ngIf="todos.length < 1 && input.value == '' && !loading ">No todos yet</div>
-<div *ngIf="todos.length < 1 && input.value != '' ">No todos match your search</div>
 
-<div *ngFor = "let todo of todos; let i = index">
+            <!-- ORDER BY FIELD-->
+            <mat-form-field appearance="fill">
+                <mat-label>Order by</mat-label>
+                <mat-select #field (selectionChange)="getTodos(input.value,field.value,'asc',done.value)">
+                    <mat-option></mat-option>
+                    <mat-option value="title">Title</mat-option>
+                    <mat-option value="created">Created</mat-option>
+                    <mat-option value="dueDate">Due date</mat-option>
+                    <mat-option value="done">Done</mat-option>
+                </mat-select>
+            </mat-form-field>
 
-    <!-- checkbox di test per il delete Bulk-->
-    <div *ngIf="bulkDeleteActivated">
-        <label>Delete</label>
-        <input type="checkbox" name="todo" value="todo._id" (change)=addTodosToDelete(todo._id)>
+
+            <!-- ORDER -->
+            <button mat-icon-button aria-label="Order" (click)="orderField(input.value,field.value,done.value)">
+                <mat-icon>{{order_arrow}}</mat-icon>
+            </button>
+
+            <!-- FILTER BY DONE -->
+            <mat-form-field appearance="fill">
+                <mat-label>Filter by done</mat-label>
+                <mat-select #done (selectionChange)="getTodos(input.value,field.value,'asc',done.value)">
+                    <mat-option></mat-option>
+                    <mat-option value="true">Done</mat-option>
+                    <mat-option value="false">Not done</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+        </div>
+
+    </header>
+
+
+    <!-- tasto per procedere con l'eliminazione multipla dei todos -->
+    <div class="header-container">
+        <div>
+            <span *ngIf="!bulkDeleteActivated">
+                <button mat-icon-button aria-label="Delete todo" mat-button routerLink="/add-todo">
+                    <mat-icon>note_add</mat-icon>
+                    Create todo
+                </button>
+            </span>
+            <span *ngIf="todos.length > 1 && !bulkDeleteActivated">
+                <button mat-icon-button aria-label="Delete multiple todos" (click)="displayCheckboxes()" mat-button
+                    id="todoDeleteButton">
+                    <mat-icon>delete</mat-icon>
+                    Delete multiple todos
+                </button>
+            </span>
+        </div>
+        <div *ngIf="bulkDeleteActivated">
+            <button mat-raised-button aria-label="Delete multiple todos" (click)="displayCheckboxes()">
+                Cancel
+            </button>
+            <button *ngIf="todosToDelete.length > 0" mat-raised-button aria-label="Delete todos"
+                (click)="deleteMultipleTodos()">Delete todos</button>
+        </div>
+    </div><br>
+
+
+    <mat-divider></mat-divider>
+
+
+    <div *ngIf="todos.length < 1 && loading ">
+        <mat-spinner color="black"></mat-spinner>
     </div>
-
-    <input type="checkbox" [checked]="todo.done" (change)="setDone(todo._id,todo.done)" [(ngModel)]="todos[i].done" >
-
-    <h3>{{todo.title}}</h3>
-    <p>{{todo.description}}</p> 
-
-    <h6>Created on : {{todo.created | formatDate }}</h6>
-
-    <div *ngIf="todo.dueDate != null">
-        <h5>Due date: {{todo.dueDate | formatDate}}</h5>
-    </div>
+    <div *ngIf="todos.length < 1 && input.value == '' && !loading ">No todos yet</div>
+    <div *ngIf="todos.length < 1 && input.value != '' ">No todos match your search</div>
 
 
-    <button routerLink="/edit-todo/{{todo._id}}">Edit</button>
-    <button (click)="deleteTodo(todo._id)">Delete</button>
 
-    <hr>
+
+    <section *ngIf="!bulkDeleteActivated" class="example-section">
+
+
+        <div *ngFor="let todo of todos; let i = index">
+
+            <mat-toolbar [ngClass]="setDoneStyle(todo.done)">
+
+                <mat-toolbar-row>
+                    <span id="checkboxSetDone">
+                        <mat-checkbox color="primary" class="example-margin" [checked]="todo.done"
+                            (change)="setDone(todo._id,todo.done)" [(ngModel)]="todos[i].done"></mat-checkbox>
+                    </span>
+                    <h1 class="mat-h2" id="todoTitle">{{todo.title}}</h1>
+                    <span class="example-spacer"></span>
+                    <button mat-icon-button aria-label="Edit todo" mat-button id="todoEditButton"
+                        routerLink="/edit-todo/{{todo._id}}">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button aria-label="Delete todo" mat-button id="todoDeleteButton"
+                        (click)="deleteTodo(todo._id)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-toolbar-row>
+
+                <mat-toolbar-row>
+                    <span class="mat-h3" id="todoDescription">
+                        <p>{{todo.description}}</p>
+                    </span>
+                </mat-toolbar-row>
+
+                <mat-toolbar-row>
+                    <span class="mat-h4" id="todoCreated">Created at : {{todo.created | formatDate }}</span>
+                    <span class="example-spacer"></span>
+                    <span class="mat-h4" *ngIf="todo.dueDate">Due date : {{todo.dueDate | formatDate }}</span>
+                </mat-toolbar-row>
+
+            </mat-toolbar>
+
+            <mat-divider></mat-divider>
+
+        </div>
+
+
+    </section>
+
+
+    <section *ngIf="bulkDeleteActivated && todos.length > 0"><br>
+        <h2 class="mat-h2" id="titleForBulkDelete">Which todos do you want to delete?</h2>
+        <mat-selection-list color="primary">
+            <mat-list-option *ngFor="let todo of todos" name="todo" value="todo._id"
+                (click)="addTodosToDelete(todo._id)">
+                <div>
+                    <span class="titleListBulkDelete">{{todo.title}}</span>
+                    <span class="descriptionListBulkDelete">{{todo.description}}</span>
+                    <span class="checkboxListBulkDelete">Done <mat-checkbox color="primary" disabled="true"
+                            class="example-margin" [checked]="todo.done"></mat-checkbox></span>
+                </div>
+                <mat-divider></mat-divider>
+            </mat-list-option>
+        </mat-selection-list>
+    </section>
 
 </div>

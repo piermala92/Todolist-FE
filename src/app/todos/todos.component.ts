@@ -1,7 +1,9 @@
+import { DialogComponent } from './../dialog/dialog.component';
 import { FormatDatePipe } from './../custom-pipes/format-date.pipe';
 import { Component, OnInit } from '@angular/core';
 import { TodoService } from '../services/todo.service';
 import { debounceTime, map } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
 
 
 
@@ -30,7 +32,19 @@ export class TodosComponent implements OnInit {
   bulkDeleteActivated : boolean;
   todosToDelete : Todo[] = [];
 
-  constructor(private todoService : TodoService) { }
+  // parametri per ordinamento
+  field : string;
+  order_arrow : string = "arrow_upward";
+  orderAscending : boolean;
+
+  
+  /// orders for select 
+  orders = ['ascending','descending'];
+
+  orderParam : string;
+
+
+  constructor(private todoService : TodoService, public dialog : MatDialog) { }
 
   ngOnInit(): void {
 
@@ -42,24 +56,10 @@ export class TodosComponent implements OnInit {
 
 
 
-  /// GET TODOS 
-
-  // function with Rest Parameters
-  /*getTodos(...params){
-
-    /*console.log(params);
-    console.log(arguments);
-    console.log("---------");    
-    console.log(params.length);
-    console.log(arguments.length);
+  /// GET TODOS   
 
 
-    this.todoService.getTodos(params).subscribe(
-      res => { this.todos = res;  console.log(res) }
-    )
-
-  }*/
-  
+  /// getTodos classico con parametri opzionali 
   getTodos(input?, field?, order?, done?){
 
     this.todos = [];
@@ -88,6 +88,11 @@ export class TodosComponent implements OnInit {
 
 
   }
+
+
+
+
+  /// nuovo getTodos adattato ad Angular Material con i campi settati nel file ts e cambiati con l'ngModel
 
 
 
@@ -131,17 +136,39 @@ export class TodosComponent implements OnInit {
   deleteTodo(id) {
 
     console.log(id);
+ 
 
-    let confirmDelete = confirm("Are you sure you want to delete this todo?");
+    /// Method with Angular Dialog
+    const dialogRef = this.dialog.open(DialogComponent, {data : {prompt : 'deleteOnePrompt'}});
 
-    if(confirmDelete){
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (result === "true"){     /// qui true viene passata come stringa dal dialog, e non come boolean
+          this.todoService.deleteTodo(id).subscribe(
+            res => 
+                { 
+                  this.dialog.open(DialogComponent, {data : {prompt : 'alertDeleteOneSuccess'}}),
+                  this.getTodos()
+                }
+          );
+        } else {
+          return;
+        }
+      }
+    )    
 
-      this.todoService.deleteTodo(id).subscribe(
-        res => { alert(res['message']), console.log(res), this.getTodos() }
-      );
+  }
 
-    }
-    
+
+
+
+  setDoneStyle(done){
+
+    if(done){
+      return 'toolbarDone';
+    } 
+
+    return null;
 
   }
 
@@ -153,6 +180,8 @@ export class TodosComponent implements OnInit {
 
 
   addTodosToDelete(value){
+
+    console.log(value);
 
     // se un todo è già presente, lo eliminiamo dalla lista
     if(this.todosToDelete.includes(value)) {
@@ -166,6 +195,7 @@ export class TodosComponent implements OnInit {
     }
 
     console.log(this.todosToDelete);
+    console.log(this.todosToDelete.length);
 
   }
 
@@ -174,7 +204,34 @@ export class TodosComponent implements OnInit {
   /// SUBMIT DELETE MULTIPLE TODOS
   deleteMultipleTodos(){
 
-    let confirmDelete = confirm("Are you sure you want to delete these todos?");
+
+
+    /// Method with Angular Material 
+    const dialogRef = this.dialog.open(DialogComponent, {data : {prompt : 'deleteManyPrompt'}});
+
+    dialogRef.afterClosed().subscribe(
+
+      result => {
+          
+        if (result === "true"){     /// qui true viene passata come stringa dal dialog, e non come boolean
+          this.todoService.deleteMultipleTodos(this.todosToDelete).
+              subscribe(
+                  res => { console.log(res), this.todosToDelete = [], this.bulkDeleteActivated = false, this.getTodos() },
+                  err => console.log(err)
+            )
+        } else {
+          return;
+        }
+
+      },
+      error => {
+        alert(error)
+      }
+
+    );
+
+    /// OLD METHOD
+    /*let confirmDelete = confirm("Are you sure you want to delete these todos?");
 
 
     if(confirmDelete){
@@ -188,7 +245,7 @@ export class TodosComponent implements OnInit {
     }
 
 
-    return;
+    return;*/
 
   }
 
@@ -200,7 +257,38 @@ export class TodosComponent implements OnInit {
 
     this.bulkDeleteActivated = !this.bulkDeleteActivated;
 
+    this.todosToDelete = [];
+
   }
+
+
+  orderField(input,field,done){
+
+    if (this.order_arrow == 'arrow_upward'){
+
+      this.order_arrow = 'arrow_downward';
+      this.getTodos(input,field,'desc',done);
+      
+    } else {
+
+      this.order_arrow = 'arrow_upward';
+      this.getTodos(input,field,'asc',done);
+
+    }
+  }
+
+
+
+
+  testarrow(){
+
+    this.order_arrow = "arrow_downward";
+
+  }
+
+
+
+  
 
 
 

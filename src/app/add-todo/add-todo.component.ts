@@ -3,6 +3,9 @@ import { TodoService } from './../services/todo.service';
 import { Component, OnInit } from '@angular/core';
 import { Form, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ErrorMappingService } from '../services/utilities/error-mapping.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from './../dialog/dialog.component';
+
 
 @Component({
   selector: 'app-add-todo',
@@ -14,11 +17,11 @@ export class AddTodoComponent implements OnInit {
   addTodoForm : FormGroup;
 
 
-  constructor(private todoService : TodoService, private router : Router, private formBuilder : FormBuilder, private errorMapping : ErrorMappingService) { 
+  constructor(private todoService : TodoService, private router : Router, private formBuilder : FormBuilder, private errorMapping : ErrorMappingService, public dialog : MatDialog) { 
 
     this.addTodoForm = formBuilder.group(
       {
-        'title': [null, Validators.compose([Validators.required, Validators.maxLength(30)])],
+        'title': [null, Validators.compose([Validators.required, Validators.maxLength(25)])],
         'description' : [null, Validators.maxLength(50)],
         'dueDate' : [null]
       }
@@ -41,7 +44,10 @@ export class AddTodoComponent implements OnInit {
     /// aggiungiamo il todo al db 
     this.todoService.addTodo(formData)
         .subscribe(
-          res => { console.log(res), alert ("Todo added successfully!"), this.router.navigate(['/todos']) },
+          res => { 
+              this.dialog.open(DialogComponent, { data : {prompt : 'addTodoSuccessAlert'}}) , 
+              this.router.navigate(['/todos']) 
+          },
           err => { console.log(err), alert(this.errorMapping.mapError(err.error.description)) }
         )
 

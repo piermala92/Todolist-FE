@@ -1,0 +1,44 @@
+.todo-container{
+    width: 50%; 
+    margin: 0px auto; 
+    margin-top: 7px;
+    border-style: solid;
+    border-radius: 10px;
+    border-color: rgb(243, 239, 234);
+}
+
+
+#title{
+    text-align: center; 
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+
+#form{
+    padding-left: 20px;
+    padding-right: 20px;    
+}
+
+
+#buttons{
+    padding-left: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+
+button{
+    margin-right: 15px;
+}
+
+
+.form-container{
+    width: 400px; 
+    margin: 0px auto; 
+    margin-top: 200px
+}
+
+.form-field{
+    display: block
+}

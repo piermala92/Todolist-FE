@@ -1,23 +1,56 @@
-<section class="sample-app-content">
+<div class="todo-container">
 
-    <h1>Add todo</h1>
+    <section class="sample-app-content">
 
-    <form [formGroup]="addTodoForm" (ngSubmit)="addTodo(addTodoForm.value)">
-        <p>
-            <label>Title:</label>
-            <input type="text" formControlName="title">
-        </p> 
-        <p>
-            <label>Description:</label>
-            <input type="description" formControlName="description">
-        </p>
-        <p>
-            <label>Due date:</label>
-            <input type="date" formControlName="dueDate">
-        </p>
-        <p>
-            <button type="submit" [disabled]="!addTodoForm.valid">Submit</button>
-            <button routerLink="/todos">Cancel</button>
-        </p>
-    </form>
-</section>
+
+        <h1 id="title" class="mat-h1">Add todo</h1>
+
+        <form [formGroup]="addTodoForm" (ngSubmit)="addTodo(addTodoForm.value)">
+
+            <mat-form-field id="input" class="form-field" appearance="outline">
+                <mat-label> Title
+                </mat-label>
+                <input matInput formControlName="title" required>
+                <mat-error *ngIf="addTodoForm.controls.title.touched && addTodoForm.controls.title.invalid">
+                    <span *ngIf="addTodoForm.controls.title.errors">Length is invalid</span>
+                </mat-error>
+            </mat-form-field>
+
+
+
+            <mat-form-field id="input" class="form-field" appearance="outline">
+                <mat-label> Description
+                </mat-label>
+                <input matInput formControlName="description">
+                <mat-error *ngIf="addTodoForm.controls.description.touched && addTodoForm.controls.description.invalid">
+                    <span *ngIf="addTodoForm.controls.description.errors">Length is invalid</span>
+                </mat-error>
+            </mat-form-field>
+
+
+
+            <mat-form-field id="dueDate" appearance="fill">
+                <mat-label>Due date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="dueDate">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+
+            <div id="buttons">
+                <button mat-raised-button color="primary" type="submit" [disabled]="!addTodoForm.valid">Create</button>
+                <button mat-raised-button color="secondary" routerLink="/todos">Cancel</button>
+            </div>
+
+        </form>
+
+
+
+        <!-- FORM APPROVATO -->
+
+        <!-- 11/11/2020 01:07-->
+
+
+    </section>
+
+</div>

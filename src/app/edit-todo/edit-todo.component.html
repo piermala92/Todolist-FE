@@ -1,25 +1,63 @@
-<section class="sample-app-content">
+<div class="todo-container">
+    <section class="sample-app-content">
 
-    <h1>Edit todo</h1>
 
-    <form [formGroup]="editTodoForm" (ngSubmit)="editTodo(editTodoForm.value)">
-        <p>
-            <label>Title:</label>
-            <input type="text" formControlName="title">
-        </p>
-        <p>
-            <label>Description:</label>
-            <input type="description" formControlName="description">
-        </p>
-        <p>
-            <label>Due date:</label>
-            <input type="date" formControlName="dueDate">
-        </p>
-        <p>
-            <button type="submit" [disabled]="!editTodoForm.valid">Submit</button>
-        </p>
-        <p>
-            <button routerLink="/">Cancel</button>
-        </p>
-    </form>
-</section>
+        <h1 id="title" class="mat-h1">Edit todo</h1>
+
+
+        <form id="form" [formGroup]="editTodoForm" (ngSubmit)="editTodo(editTodoForm.value)">
+
+            <mat-form-field class="form-field" appearance="outline">
+                <mat-label> Title
+                </mat-label>
+                <input matInput formControlName="title" required>
+                <mat-error *ngIf="editTodoForm.controls.title.touched && editTodoForm.controls.title.invalid">
+                    <span *ngIf="editTodoForm.controls.title.errors">Length is invalid</span>
+                </mat-error>
+            </mat-form-field>
+
+
+
+            <mat-form-field class="form-field" appearance="outline">
+                <mat-label> Description
+                </mat-label>
+                <input matInput formControlName="description">
+                <mat-error
+                    *ngIf="editTodoForm.controls.description.touched && editTodoForm.controls.description.invalid">
+                    <span *ngIf="editTodoForm.controls.description.errors">Length is invalid</span>
+                </mat-error>
+            </mat-form-field>
+
+
+
+            <mat-form-field appearance="fill">
+                <mat-label>Due date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="dueDate">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+
+            <div id="buttons">
+                <button mat-raised-button color="primary" type="submit" [disabled]="!editTodoForm.valid">Edit</button>
+                <button mat-raised-button color="secondary" routerLink="/todos">Cancel</button>
+            </div>
+
+        </form>
+
+
+    </section>
+
+</div>
+
+
+<!-- la data viene visualizzata un'ora indietro perché il backend salva un'ora indietro: 
+
+    esempio : 
+        il todo viene creato alle 18:56
+        il backend mostra che è stato creato alle 17:56
+
+    oppure 
+        la data del dueDate impoostata sul frontend è il 01-01-2021
+        il backend mostra che la data del dueDate è il 31-12-2020
+-->

@@ -4,6 +4,9 @@ import { TodoService } from './../services/todo.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorMappingService } from '../services/utilities/error-mapping.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from './../dialog/dialog.component';
+
 
 
 
@@ -32,7 +35,7 @@ export class EditTodoComponent implements OnInit {
   editTodoForm : FormGroup;
 
 
-  constructor(private route : ActivatedRoute, private router : Router, private todoService : TodoService, private formBuilder : FormBuilder, private dateFormatService : DateFormatService, private errorMapping : ErrorMappingService) { 
+  constructor(private route : ActivatedRoute, private router : Router, private todoService : TodoService, private formBuilder : FormBuilder, private dateFormatService : DateFormatService, private errorMapping : ErrorMappingService, public dialog : MatDialog) { 
     
 
     /// qui la inizializzo per creare la form
@@ -108,7 +111,10 @@ export class EditTodoComponent implements OnInit {
     /// aggiungiamo il todo al db 
     this.todoService.editTodo(this.todoId, formData)
         .subscribe(
-          res => { console.log(res), alert ("Todo edited successfully!"), this.router.navigate(["/"]) },
+          res => { 
+              this.dialog.open(DialogComponent, {data : {prompt : 'editTodoSuccessAlert'}})
+              this.router.navigate(["/"]) 
+          },
           err => { console.log(err), alert(this.errorMapping.mapError(err.error.description)) }
         )
 

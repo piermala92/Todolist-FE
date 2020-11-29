@@ -1,12 +1,96 @@
-.display{
-
-    display: block
-
+#todos{
+   width: 60%; 
+   margin: 0px auto; 
+   margin-top: 15px;
+   border-style: solid;
+   border-radius: 10px;
+   border-color: rgb(243, 239, 234);
 }
 
 
-.hide{
+#title{
+   text-align: center; 
+   padding-top: 15px;
+   margin-bottom: 25px;
+}
 
-    display: none
+.header-container{
+   padding-left: 50px; 
+}
 
+#searchInput{
+   width: 40%;
+   padding-left: 173px;
+}
+
+
+.example-spacer {
+   flex: 1 1 auto;
+}
+
+
+#todoDeleteButton{
+   margin-left: 80px;
+}
+
+
+
+#checkboxSetDone{
+   position: relative;
+   left: 30px;
+}
+
+
+
+#todoTitle {
+    position: relative;
+    left: 70px;
+}
+
+
+#todoDescription {
+   position: relative;
+   left: 50px;
+}
+
+
+#todoCreated {
+   position: relative;
+   left: 50px;
+}
+
+
+
+.mat-selection-list{
+   background-color: red;
+}
+
+
+#titleForBulkDelete{
+   text-align: center;
+   text-decoration: bold;
+}
+
+.titleListBulkDelete{
+   text-align: left;
+   text-justify: initial;
+}
+
+
+.descriptionListBulkDelete{
+   text-align: center;
+   text-justify: initial;
+   margin-left: 100px;
+}
+
+
+.checkboxListBulkDelete{
+   text-align: right;
+   text-justify: initial;
+   margin-left: 100px;
+}
+
+
+.toolbarDone{
+   background-color: yellowgreen;
 }

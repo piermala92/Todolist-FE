@@ -17,13 +17,5 @@ export class DateFormatService {
 
     return date.slice(0,date.indexOf('T'));
 
-		/*let d = date.getDate();
-		let m = date.getMonth() + 1;
-		let y = date.getFullYear();
-
-		let dateString = y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d) ;
-
-    console.log(dateString);*/
-
   }
 }

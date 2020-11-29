@@ -10,7 +10,7 @@ export class FormatDatePipe implements PipeTransform {
 
     if (date == null) return;
 
-    return formatDate(date,'dd-MM-yyyy HH:mm:ss','en-US')
+    return formatDate(date,'dd-MM-yyyy   HH:mm:ss','en-US')
 
   }
 

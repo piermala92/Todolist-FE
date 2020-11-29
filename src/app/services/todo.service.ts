@@ -37,24 +37,6 @@ export class TodoService {
 
   /// READ ALL 
 
-
-  /// rest parameters
-  /*getTodos(...params){
-
-    console.log(params);
-    console.log(params.length);
-
-    /*const httpParams = new HttpParams()
-    .append("input",inputTerm)
-    .append("field",fieldTerm)
-    .append("order",orderTerm)
-    .append("done",doneTerm)
-
-    return this.httpClient.get("http://18.130.183.191:4500/todos");
-
-  }*/
-
-
   /// hard inserted parameters
     getTodos(inputTerm?,fieldTerm?,orderTerm?,doneTerm?) {
 
